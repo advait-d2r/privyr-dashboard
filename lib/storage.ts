@@ -6,7 +6,10 @@ const BLOB_PATHNAME = "lead-dashboard/latest.json";
 const LOCAL_DATA_PATH = path.join(process.cwd(), ".data", "latest.json");
 
 function hasBlobToken(): boolean {
-  return !!process.env.BLOB_READ_WRITE_TOKEN;
+  // @vercel/blob authenticates either via an explicit BLOB_READ_WRITE_TOKEN,
+  // or via Vercel's OIDC token combined with BLOB_STORE_ID (the newer
+  // "Connect Database" flow, which doesn't expose a read-write token at all).
+  return !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 }
 
 export async function saveData(data: DashboardData): Promise<void> {
