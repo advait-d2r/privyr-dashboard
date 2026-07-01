@@ -57,7 +57,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-xl font-semibold text-slate-900">
-              Lead Management Dashboard
+              VPP Sales Dashboard - Avenor Park
             </h1>
             <p className="text-xs text-slate-400 mt-0.5">
               Data last updated{" "}

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lead Dashboard | Dreams2Realty",
+  title: "VPP Sales Dashboard - Avenor Park",
   description: "Macro-level lead and team performance dashboard.",
 };
 
