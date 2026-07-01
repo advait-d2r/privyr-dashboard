@@ -12,7 +12,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Without this, Next.js has to guess the site's domain when building the
+// absolute og:image URL — the guess isn't guaranteed to track a project
+// rename. VERCEL_PROJECT_PRODUCTION_URL always reflects the current
+// production domain, so this self-corrects on every deploy.
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "VPP Sales Dashboard - Avenor Park",
   description: "Macro-level lead and team performance dashboard.",
 };
