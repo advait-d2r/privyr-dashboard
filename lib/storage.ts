@@ -17,8 +17,11 @@ export async function saveData(data: DashboardData): Promise<void> {
 
   if (hasBlobToken()) {
     const { put } = await import("@vercel/blob");
+    // The blob store is provisioned as private-access-only, so the raw JSON
+    // file isn't reachable via a guessable public URL — only this server
+    // (via the SDK's authenticated `get`) can read it back.
     await put(BLOB_PATHNAME, json, {
-      access: "public",
+      access: "private",
       contentType: "application/json",
       addRandomSuffix: false,
       allowOverwrite: true,
@@ -33,12 +36,12 @@ export async function saveData(data: DashboardData): Promise<void> {
 
 export async function loadData(): Promise<DashboardData | null> {
   if (hasBlobToken()) {
-    const { head } = await import("@vercel/blob");
+    const { get } = await import("@vercel/blob");
     try {
-      const blob = await head(BLOB_PATHNAME);
-      const res = await fetch(blob.url, { cache: "no-store" });
-      if (!res.ok) return null;
-      return (await res.json()) as DashboardData;
+      const result = await get(BLOB_PATHNAME, { access: "private" });
+      if (!result || result.statusCode !== 200) return null;
+      const text = await new Response(result.stream).text();
+      return JSON.parse(text) as DashboardData;
     } catch {
       return null;
     }
