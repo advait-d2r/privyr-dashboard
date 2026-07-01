@@ -61,8 +61,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (err) {
     console.error(err);
+    const detail = err instanceof Error ? err.message : String(err);
     return NextResponse.json(
-      { error: "Failed to parse or save the uploaded files." },
+      { error: `Failed to parse or save the uploaded files: ${detail}` },
       { status: 500 }
     );
   }
