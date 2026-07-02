@@ -1,5 +1,5 @@
 import { Activity, ActivityCategory, Lead } from "./types";
-import { dateOnly } from "./normalize";
+import { dateOnly, hourOfDay } from "./normalize";
 
 export interface FilterState {
   dateFrom: string | null; // "YYYY-MM-DD", inclusive
@@ -139,6 +139,22 @@ export function countByDateSeries(dates: (string | null)[]): DateSeriesPoint[] {
     counts.set(ymd, (counts.get(ymd) || 0) + 1);
   }
   return days.map((date) => ({ date, count: counts.get(date) || 0 }));
+}
+
+export interface HourCount {
+  hour: number; // 0-23
+  count: number;
+}
+
+/** Counts leads by hour of day (0-23), across whatever date range is present. */
+export function leadsByHourOfDay(dates: (string | null)[]): HourCount[] {
+  const counts = new Array(24).fill(0);
+  for (const d of dates) {
+    const hour = hourOfDay(d);
+    if (hour === null) continue;
+    counts[hour] += 1;
+  }
+  return counts.map((count, hour) => ({ hour, count }));
 }
 
 export interface AvgDateSeriesPoint {

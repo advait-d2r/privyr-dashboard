@@ -8,6 +8,7 @@ import {
   avgByDateSeries,
   countBy,
   countByDateSeries,
+  leadsByHourOfDay,
 } from "@/lib/aggregate";
 import { fmtMins, fmtNumber } from "@/lib/format";
 import { colorForIndex } from "@/lib/colors";
@@ -15,6 +16,7 @@ import { Card } from "../Card";
 import { KpiCard } from "../KpiCard";
 import { CategoryBarChart } from "../charts/CategoryBarChart";
 import { TrendChart } from "../charts/TrendChart";
+import { HourOfDayChart, peakHourSummary } from "../charts/HourOfDayChart";
 
 export function LeadOverviewSection({ leads }: { leads: Lead[] }) {
   const stats = useMemo(() => {
@@ -30,6 +32,7 @@ export function LeadOverviewSection({ leads }: { leads: Lead[] }) {
     const leadsByDate = countByDateSeries(leads.map((l) => l.dateCreated)).map(
       (d) => ({ date: d.date, value: d.count })
     );
+    const leadsByHour = leadsByHourOfDay(leads.map((l) => l.dateCreated));
     const leadsBySource = countBy(leads, (l) => l.source).map((c) => ({
       label: c.key,
       value: c.count,
@@ -74,6 +77,7 @@ export function LeadOverviewSection({ leads }: { leads: Lead[] }) {
       unspecifiedStage,
       avgFirstResponse,
       leadsByDate,
+      leadsByHour,
       leadsBySource,
       leadsByTeamMember,
       leadsByStage,
@@ -112,6 +116,13 @@ export function LeadOverviewSection({ leads }: { leads: Lead[] }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card title="Leads Created by Date" className="lg:col-span-2">
           <TrendChart data={stats.leadsByDate} />
+        </Card>
+        <Card
+          title="Leads Created by Hour of Day"
+          subtitle={peakHourSummary(stats.leadsByHour) ?? undefined}
+          className="lg:col-span-2"
+        >
+          <HourOfDayChart data={stats.leadsByHour} />
         </Card>
         <Card title="Leads by Source">
           <CategoryBarChart data={stats.leadsBySource} />

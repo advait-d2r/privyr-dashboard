@@ -36,6 +36,14 @@ export function dateOnly(value: string | null): string | null {
   return value.slice(0, 10);
 }
 
+/** Extracts the hour (0-23) from a parsePrivyrDate result. */
+export function hourOfDay(value: string | null): number | null {
+  if (!value) return null;
+  const match = value.match(/^\d{4}-\d{2}-\d{2} (\d{2}):\d{2}$/);
+  if (!match) return null;
+  return Number(match[1]);
+}
+
 const MONTHS = [
   "Jan",
   "Feb",
@@ -61,6 +69,28 @@ export function formatDateLabel(ymd: string): string {
 export function formatDateShort(ymd: string): string {
   const [, mo, d] = ymd.split("-").map(Number);
   return `${MONTHS[mo - 1]} ${d}`;
+}
+
+const HOUR_LABELS = [
+  "12 AM", "1 AM", "2 AM", "3 AM", "4 AM", "5 AM",
+  "6 AM", "7 AM", "8 AM", "9 AM", "10 AM", "11 AM",
+  "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM",
+  "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM",
+];
+
+const HOUR_LABELS_SHORT = [
+  "12a", "1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a",
+  "12p", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p",
+];
+
+/** Formats an hour (0-23) as "6 PM", for tooltips. */
+export function formatHourLabel(hour: number): string {
+  return HOUR_LABELS[hour] ?? String(hour);
+}
+
+/** Formats an hour (0-23) as "6p", for compact chart axes. */
+export function formatHourShort(hour: number): string {
+  return HOUR_LABELS_SHORT[hour] ?? String(hour);
 }
 
 function isBlank(value: string | undefined | null): boolean {
