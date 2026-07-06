@@ -74,6 +74,22 @@ export function average(values: number[]): number | null {
   return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
+export interface ShareEntry {
+  teamMember: string;
+  count: number;
+  pct: number; // 0-100, share of the given subset's total
+}
+
+/** Breaks down an already-filtered subset of leads (e.g. just the uncontacted ones) by team member. */
+export function shareByTeamMember(leads: Lead[]): ShareEntry[] {
+  const total = leads.length;
+  return countBy(leads, (l) => l.teamMember).map((c) => ({
+    teamMember: c.key,
+    count: c.count,
+    pct: total > 0 ? (c.count / total) * 100 : 0,
+  }));
+}
+
 export interface AverageEntry {
   key: string;
   avg: number | null;

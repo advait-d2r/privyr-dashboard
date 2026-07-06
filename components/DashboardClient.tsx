@@ -6,6 +6,7 @@ import { DashboardData } from "@/lib/types";
 import { EMPTY_FILTERS, FilterState, filterActivities, filterLeads } from "@/lib/aggregate";
 import { FilterBar } from "./FilterBar";
 import { LeadOverviewSection } from "./sections/LeadOverviewSection";
+import { LeadAccountabilitySection } from "./sections/LeadAccountabilitySection";
 import { TeamProductivitySection } from "./sections/TeamProductivitySection";
 import { TeamSummarySection } from "./sections/TeamSummarySection";
 
@@ -88,6 +89,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-10">
         <LeadOverviewSection leads={filteredLeads} />
+        <LeadAccountabilitySection leads={filteredLeads} />
         <TeamProductivitySection activities={filteredActivities} />
         <TeamSummarySection leads={filteredLeads} activities={filteredActivities} />
       </main>
